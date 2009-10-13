@@ -242,7 +242,7 @@ file 'app/views/layouts/application.html.haml', <<-HAML
         = render :partial => 'shared/header'
       #nav
         = render :partial => 'shared/nav'
-      #content
+      #content.prepend-top
         = render :partial => "shared/flash", :locals => { :flash => flash }
         = yield
       #sidebar
