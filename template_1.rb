@@ -66,6 +66,7 @@ generate(:haml_scaffold, "page", "title:string", "body:text")
 file 'app/models/page.rb', <<-RUBY
 class Page < ActiveRecord::Base
   has_friendly_id :title, :use_slug => true
+  validates_uniqueness_of :title
 end
 RUBY
 
