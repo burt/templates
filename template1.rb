@@ -47,16 +47,26 @@ with_options :source => 'http://gems.github.com' do |config|
   config.gem 'thoughtbot-paperclip',         :lib => 'paperclip'
   config.gem 'thoughtbot-clearance',         :lib => 'clearance'
   config.gem 'notahat-machinist',            :lib => 'machinist'
-  config.gem 'cucumber',                     :lib => 'cucumber'
-  config.gem 'thoughtbot-shoulda',           :lib => 'shoulda'
-  config.gem 'webrat',                       :lib => 'webrat'
-  config.gem 'mocha',                        :lib => 'mocha'
   config.gem 'chriseppstein-compass',        :lib => 'compass'
   config.gem 'haml',                         :lib => 'haml',                  :version => '>=2.2.0'
   config.gem 'pat-maddox-giternal',          :lib => 'giternal'
 end
 rake 'gems:install'
 rake 'gems:unpack GEM=chriseppstein-compass'
+
+################################################################################################
+# Configure Test Environment
+################################################################################################
+if yes?("\n>> Got rspec? (y/n)")
+  append_to_file "config/environments/test.rb", <<-CONFIG
+\nconfig.gem 'rspec',       :lib => false,        :version => '>=1.2.8' unless File.directory?(File.join(Rails.root, 'vendor/plugins/rspec'))
+config.gem 'rspec-rails', :lib => false,        :version => '>=1.2.7.1' unless File.directory?(File.join(Rails.root, 'vendor/plugins/rspec-rails'))
+config.gem 'cucumber',    :lib => false,        :version => '>=0.3.104' unless File.directory?(File.join(Rails.root, 'vendor/plugins/cucumber'))
+config.gem 'webrat',      :lib => false,        :version => '>=0.5.0' unless File.directory?(File.join(Rails.root, 'vendor/plugins/webrat'))
+CONFIG
+  generate :rspec
+  generate :cucumber
+end
 
 ################################################################################################
 # Setup paging
@@ -312,6 +322,7 @@ end
 rake "db:migrate"
 rake "friendly_id:make_slugs MODEL=Page"
 rake "db:seed"
+rake "db:test:clone"
 
 ################################################################################################
 # Configure git
